@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Absensi Mahasiswa Baru</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-blue-600 text-white p-4 flex justify-between items-center">
+        <h1 class="text-xl font-semibold">Dashboard Admin</h1>
+        <button id="logoutBtn" class="bg-yellow-400 text-blue-800 px-3 py-1 rounded hover:bg-yellow-300">Logout</button>
+    </header>
+    <main class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-lg font-semibold text-gray-800">Total Hadir</h2>
+                <p id="totalHadir" class="text-2xl font-bold text-green-600">0</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-lg font-semibold text-gray-800">Total Mahasiswa</h2>
+                <p id="totalMahasiswa" class="text-2xl font-bold text-blue-600">0</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-lg font-semibold text-gray-800">Persentase</h2>
+                <p id="persentase" class="text-2xl font-bold text-yellow-600">0%</p>
+            </div>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow mb-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Mahasiswa Belum Hadir</h2>
+            <table id="belumHadirTable" class="w-full table-auto">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="px-4 py-2 text-left">Nama Lengkap</th>
+                        <th class="px-4 py-2 text-left">Program Studi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        <button id="exportBtn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Ekspor CSV</button>
+    </main>
+    <script src="js/main.js"></script>
+</body>
+</html>
