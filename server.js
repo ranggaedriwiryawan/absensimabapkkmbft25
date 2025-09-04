@@ -1,30 +1,16 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const csv = require('csv-parser');
+app.get('/api/data', (req, res) => {
+    const results = [];
+    const csvFilePath = path.join(__dirname, 'DATA MABA.csv');
 
-const app = express();
-const port = 3000;
-
-const results = [];
-
-// Membaca dan mem-parsing file CSV
-// Menggunakan path.join untuk memastikan lokasinya selalu benar
-fs.createReadStream(path.join(__dirname, 'DATA MABA.csv'))
-    .pipe(csv())
-    .on('data', (data) => results.push(data))
-    .on('end', () => {
-        console.log('File CSV berhasil diproses.');
-    });
-
-// Menyajikan file statis dari folder 'public'
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Membuat API endpoint untuk data mahasiswa
-app.get('/api/mahasiswa', (req, res) => {
-    res.json(results);
-});
-
-app.listen(port, () => {
-    console.log(`Server berjalan di http://localhost:${port}`);
+    fs.createReadStream(csvFilePath)
+        .on('error', (error) => {
+            // Jika file tidak ada atau ada masalah lain, kirim pesan error
+            console.error("Gagal membaca file CSV:", error.message);
+            res.status(500).json({ success: false, message: 'Server gagal memuat data.' });
+        })
+        .pipe(csv())
+        .on('data', (data) => results.push(data))
+        .on('end', () => {
+            res.json(results);
+        });
 });
