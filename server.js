@@ -37,7 +37,12 @@ app.get('/api/mahasiswa', (req, res) => {
 });
 
 // 4. MENJALANKAN SERVER
+// SOLUSI: Tambahkan rute ini untuk halaman utama secara manual
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Baris di bawah ini sudah ada di kode Anda, jangan diubah
 app.listen(port, () => {
-    console.log(`Server berjalan lancar di http://localhost:${port}`);
-    console.log("Silakan buka aplikasi di browser Anda.");
+    console.log(`Server berjalan di http://localhost:${port}`);
 });
