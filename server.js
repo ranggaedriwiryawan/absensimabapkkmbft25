@@ -1,48 +1,34 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const csv = require('csv-parser');
+// Memuat environment variables dari file .env
+require("dotenv").config();
 
-// 1. MEMBUAT APLIKASI EXPRESS (INI BAGIAN YANG HILANG)
-const app = express();
-const port = 3000;
+const http = require("http");
+const { neon } = require("@neondatabase/serverless");
 
-const results = [];
+// Pastikan DATABASE_URL ada di file .env
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL environment variable is not set");
+}
 
-// Membaca dan mem-parsing file CSV
-// Menggunakan path.join untuk memastikan lokasinya selalu benar
-const csvFilePath = path.join(__dirname, 'DATA MABA.csv');
+const sql = neon(process.env.DATABASE_URL);
 
-fs.createReadStream(csvFilePath)
-    .on('error', (error) => {
-        // Tambahan: Memberi tahu jika file CSV tidak ditemukan
-        console.error("==========================================");
-        console.error("!!! ERROR: File 'DATA MABA.csv' tidak ditemukan.");
-        console.error("Pastikan file tersebut ada di folder yang sama dengan server.js");
-        console.error("==========================================");
-    })
-    .pipe(csv())
-    .on('data', (data) => results.push(data))
-    .on('end', () => {
-        console.log('File CSV berhasil diproses dan data siap disajikan.');
-    });
+const requestHandler = async (req, res) => {
+  try {
+    // Menjalankan query ke database
+    const result = await sql`SELECT version()`;
+    const { version } = result[0];
 
-// 2. MENYAJIKAN FILE STATIS (HTML, CSS, JS) DARI FOLDER 'public'
-app.use(express.static(path.join(__dirname, 'public')));
+    // Mengirim response jika berhasil
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end(version);
+  } catch (error) {
+    // Menangani error jika koneksi atau query gagal
+    console.error("Database query failed:", error);
+    res.writeHead(500, { "Content-Type": "text/plain" });
+    res.end("Internal Server Error");
+  }
+};
 
-// 3. MEMBUAT API ENDPOINT UNTUK MENGIRIM DATA MAHASISWA
-// Endpoint ini yang akan diakses oleh frontend untuk mendapatkan data
-app.get('/api/mahasiswa', (req, res) => {
-    res.json(results);
-});
-
-// 4. MENJALANKAN SERVER
-// SOLUSI: Tambahkan rute ini untuk halaman utama secara manual
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// Baris di bawah ini sudah ada di kode Anda, jangan diubah
-app.listen(port, () => {
-    console.log(`Server berjalan di http://localhost:${port}`);
+const port = process.env.PORT || 3000;
+http.createServer(requestHandler).listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });
