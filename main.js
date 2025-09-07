@@ -34,6 +34,7 @@ async function pingHealth() {
   }
 }
 
+
 function renderMhs(m) {
   resultBox.innerHTML = `
     <div class="space-y-1">
