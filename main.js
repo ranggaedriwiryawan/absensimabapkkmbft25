@@ -20,10 +20,14 @@ function showNote(type, msg) {
 
 async function pingHealth() {
   try {
-    const r = await fetch(`${API_BASE}/api/health`, { cache: "no-store" });
-    const j = await r.json();
-    healthBox.textContent = JSON.stringify(j, null, 2);
-    if (!j.ok || (j.count ?? 0) === 0) showNote("warn", "Backend live, tapi data kosong. Cek ENV & akses Sheets.");
+    const r = await fetch(`/api/health`, { cache: "no-store" });
+    const txt = await r.text();
+    let j;
+    try { j = JSON.parse(txt); } catch { j = { raw: txt }; }
+    healthBox.textContent = JSON.stringify({ status: r.status, ...j }, null, 2);
+    if (!r.ok || !j.ok || (j.count ?? 0) === 0) {
+      showNote("warn", "Backend bermasalah atau data kosong. Cek /api/health detail.");
+    }
   } catch (e) {
     healthBox.textContent = `Gagal cek health: ${e.message}`;
     showNote("err", "Tidak bisa menghubungi backend /api/health.");
