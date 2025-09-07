@@ -1,17 +1,13 @@
 {
+  "name": "absensimabapkkmbft25",
+  "version": "1.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server/server.js",
-    "dev": "nodemon server/server.js"
+    "dev": "vercel dev --listen 3000"
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
     "google-auth-library": "^9.14.2",
     "google-spreadsheet": "^4.1.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.0"
   }
 }
